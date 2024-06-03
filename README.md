@@ -1,13 +1,19 @@
+<div align="center">
+Django E-Commerce Application <br><br>
+<img src="https://www.python.org/static/opengraph-icon-200x200.png" alt="Python" width="50" height="50"> <img src="https://www.djangoproject.com/m/img/logos/django-logo-negative.png" alt="Django" width="80" height="50"> <img src="https://cdn.iconscout.com/icon/free/png-256/html5-10-569380.png" alt="HTML" width="50" height="50"> <img src="https://cdn.iconscout.com/icon/free/png-256/css-118-569410.png" alt="CSS" width="50" height="50"> <img src="https://cdn.iconscout.com/icon/free/png-256/bootstrap-226077.png" alt="Bootstrap" width="50" height="50"> <img src="https://cdn.iconscout.com/icon/free/png-256/javascript-24-1174950.png" alt="JavaScript" width="50" height="50">
 
-## DJANGO COMPLETE ECOMMERCE - 
-# complete-djano-ecommerce-youtube
-Create a Fully Functional Ecommerce Application in Django | Django Ecommerce  - Welcome to the new series on Django e-commerce. Where we will be building a complete e-commerce application from ground zero. We will be Creating a fully functional e-commerce application in django.   #djangoecommerce #djangoecommercehindi #ecommerceapplicationdjango
+</div>
+This is a Django-based e-commerce application built for selling products online. It provides a platform for users to browse products, add them to their cart, and place orders securely.
 
-
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/HoTOlk79_iQ/0.jpg)](https://www.youtube.com/watch?v=HoTOlk79_iQ)
-
-
-
-# THIS IS A COMPLETE DJANGO ECOMMERCE TUTORIAL 
-
-django ecommerce application,django ecommerce hindi,django ecommerce multi vendor,django ecommerce website with multiple vendors,ecommerce django,ecommerce django project,ecommerce django tutorial,django ecommerce bangla,django ecommerce payment,fully funtional django ecommerce,django ecommerce tutorial,django ecommerce,ecommerce in django,django project,django ecommerce in hindi
+Features
+User authentication and registration
+Product browsing with detailed descriptions and images
+Shopping cart functionality
+Secure checkout process
+Order tracking and history
+Admin panel for managing products, orders, and users
+Technologies Used
+Django
+HTML/CSS
+Bootstrap
+JavaScript

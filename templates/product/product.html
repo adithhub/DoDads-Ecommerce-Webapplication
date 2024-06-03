@@ -1,7 +1,5 @@
 {% extends "base/base.html"%}
-
 {%  block start %}
-
 <section class="section-content padding-y bg">
     <div class="container">
     
@@ -16,9 +14,7 @@
     <div class="thumbs-wrap">
       {% for image in product.product_images.all %}
       <a href="#" class="item-thumb"> <img src="/media/{{image.image}}"></a>
-      
       {% endfor %}
-
     </div> <!-- slider-nav.// -->
     </article> <!-- gallery-wrap .end// -->
             </aside>

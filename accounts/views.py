@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.http import HttpResponseRedirect,HttpResponse
 # Create your views here.
-from .models import Profile
-
+from .models import Cart, CartItems, Profile
+from products.models import *
 
 def login_page(request):
     
@@ -34,10 +34,7 @@ def login_page(request):
 
         messages.warning(request, 'Invalid credentials')
         return HttpResponseRedirect(request.path_info)
-
-
     return render(request ,'accounts/login.html')
-
 
 def register_page(request):
 
@@ -60,12 +57,7 @@ def register_page(request):
 
         messages.success(request, 'An email has been sent on your mail.')
         return HttpResponseRedirect(request.path_info)
-
-
     return render(request ,'accounts/register.html')
-
-
-
 
 def activate_email(request , email_token):
     try:
@@ -75,3 +67,29 @@ def activate_email(request , email_token):
         return redirect('/')
     except Exception as e:
         return HttpResponse('Invalid Email token')
+    
+def add_to_cart(request, uid):
+    variant = request.GET.get('variant')
+    product = Product.objects.get(uid = uid)
+    user = request.user
+    cart , _ = Cart.objects.get_or_create(user = user, is_paid = False)
+    cart_item = CartItems.objects.create(cart = cart, product = product, )
+    if variant:
+        variant = request.GET.get('variant')
+        size_variant = SizeVariant.objects.get(size_name = variant)
+        cart_item.size_variant = size_variant
+        cart_item.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def remove_cart(request, cart_item_uid):
+    try:
+        cart_item= CartItems.objects.get(uid = cart_item_uid)
+        cart_item.delete()
+    except Exception as e:
+        print(e)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def cart(request):
+    cart = Cart.objects.filter(is_paid=False, user=request.user).first()
+    context = {'cart': cart}
+    return render(request, 'accounts/cart.html', context)

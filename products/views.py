@@ -1,8 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseNotFound
+
 
 def get_product(request, slug):
+    print('******')
+    print(request.user)
+    print('******')
+    print(request.user.profile.get_cart_count)
     try:
         product = get_object_or_404(Product, slug=slug)
         context = {'product': product}

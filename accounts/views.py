@@ -106,7 +106,7 @@ def cart(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         cart_total = cart_obj.get_cart_total()
-        coupon_min_amount = coupon_obj.minimum_amount
+        coupon_min_amount = coupon_obj.minimum_amount  # Directly access attribute
 
         # Ensure values are numeric for comparison
         if cart_total < coupon_min_amount:
@@ -123,3 +123,10 @@ def cart(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     return render(request, 'accounts/cart.html', context)
+
+def remove_coupon(request, cart_id):
+    cart = Cart.objects.get(uid = cart_id)
+    cart.coupon = None
+    cart.save()
+    messages.success(request, 'Coupon Removed.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

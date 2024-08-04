@@ -31,8 +31,9 @@ class Cart(BaseModel):
 
         # Apply coupon discount if available
         if self.coupon:
-            discount = self.coupon.discount_price or 0
-            total_price -= discount
+            if self.coupon.minimum_amount < total_price:
+                discount = self.coupon.discount_price or 0
+                total_price -= discount
 
         return total_price
 

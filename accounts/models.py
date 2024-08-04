@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import uuid
 from base.emails import send_account_activation_email
-from products.models import ColorVariant, Product, SizeVariant
+from products.models import ColorVariant, Product, SizeVariant, Coupon
 
 class Profile(BaseModel):
     user = models.OneToOneField(User , on_delete=models.CASCADE , related_name="profile")
@@ -18,37 +18,41 @@ class Profile(BaseModel):
         return CartItems.objects.filter(cart__is_paid = False, cart__user = self.user).count()
     
 class Cart(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='carts')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
 
     def get_cart_total(self):
         cart_items = self.cart_items.all()
-        price = []
+        total_price = 0
+
         for cart_item in cart_items:
-            price.append(cart_item.product.price)
-            if cart_item.color_variant:
-                color_variant_price = cart_item.color_variant.price
-                price.append(color_variant_price)
-            if cart_item.size_variant:
-                size_variant_price = cart_item.size_variant.price
-                price.append(size_variant_price)
-        return sum(price)
+            total_price += cart_item.get_product_price()  # Use method to get price
+
+        # Apply coupon discount if available
+        if self.coupon:
+            discount = self.coupon.discount_price or 0
+            total_price -= discount
+
+        return total_price
+
+
+
 
 class CartItems(BaseModel):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL,null=True, blank=True)
-    color_variant = models.ForeignKey(ColorVariant,on_delete=models.SET_NULL, null=True, blank= True)
-    size_variant = models.ForeignKey(SizeVariant,on_delete=models.SET_NULL, null=True, blank= True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    color_variant = models.ForeignKey(ColorVariant, on_delete=models.SET_NULL, null=True, blank=True)
+    size_variant = models.ForeignKey(SizeVariant, on_delete=models.SET_NULL, null=True, blank=True)
 
     def get_product_price(self):
         price = [self.product.price]
         if self.color_variant:
-            color_variant_price = self.color_variant.price
-            price.append(color_variant_price)
+            price.append(self.color_variant.price)
         if self.size_variant:
-            size_variant_price = self.size_variant.price
-            price.append(size_variant_price)
+            price.append(self.size_variant.price)
         return sum(price)
+
 
 @receiver(post_save , sender = User)
 def  send_email_token(sender , instance , created , **kwargs):
